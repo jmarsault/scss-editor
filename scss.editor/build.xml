@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="org.netbeans.modules.languages.scss" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.modules.languages.scss.</description>
+    <import file="nbproject/build-impl.xml"/>
+
+<!--    <target name="init-antlr" >
+        <property name="antlr.jar" location="D:/lib/antlr/antlr-3.2.jar"/>
+        <property name="antlr.grammar" location="src/org/netbeans/modules/languages/scss/antlr/Scss.g"/>
+    </target>
+
+    <target name="compile" depends="antlr,init,projectized-common.compile"/>
+
+    <target name="antlr" depends="init-antlr" unless="up-to-date">
+        <java classname="org.antlr.Tool"  fork="true">
+            <arg value="${antlr.grammar}"/>
+            <arg value="-o"/>
+            <arg value="src/org/netbeans/modules/languages/scss/antlr/" />
+            <classpath path="${antlr.jar}"/>
+        </java>
+        <replace token="public class"
+             value='@SuppressWarnings("cast") public class'
+             dir="src/org/netbeans/modules/languages/scss/antlr/"
+             includes="ScssLexer.java,ScssParser.java" />
+    </target>-->
+
+</project>
