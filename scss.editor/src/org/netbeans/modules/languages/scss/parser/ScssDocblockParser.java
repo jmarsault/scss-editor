@@ -10,6 +10,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.scss.engine.Engine;
 import org.netbeans.modules.scss.options.ScssSettings;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
@@ -200,7 +201,7 @@ public class ScssDocblockParser {
 			base = fo.getParent().getPath();
 		}
 		File outFile = new File(base, outputFileValue);
-		return outFile.getPath();
+		return FileUtil.normalizeFile(outFile).getPath();
 	}
 
 	/**
