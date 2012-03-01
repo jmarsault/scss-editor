@@ -14,6 +14,7 @@ import java.util.List;
 import org.jruby.embed.ScriptingContainer;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.queries.FileEncodingQuery;
+import org.netbeans.modules.languages.scss.parser.ScssDocblockParser;
 import org.netbeans.modules.scss.options.ScssSettings;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -108,13 +109,21 @@ public class Engine {
 	    io.setFocusTaken(false);
 	    io.getOut().println(NbBundle.getMessage(Engine.class, "FMT_compilation_started", fo.getNameExt()));
 
+	    ScssDocblockParser commentParser = new ScssDocblockParser(fo,io);
 	    scriptingContainer.put("@result", result);
+
+	    //Set up variables, allowing globals to be overwritten by file specific doc blocks
+	    ScssSettings settings = ScssSettings.getDefault();
+	    boolean debugInfo = commentParser.isDebugInfoEnabled(settings.isDebugInfoEnabled());
+	    boolean lineComments = commentParser.isLineCommentsEnabled(settings.isLineCommentsEnabled());
+	    String outputStyle = commentParser.getOutputStyle(settings.getOutputStyle().name);
+
 	    String script = "require 'sass'\n";
 	    script += "options = {}\n";
 	    script += "options[:load_paths] = " + findDependencies(fo) + "\n";
-	    script += "options[:style] = :" + ScssSettings.getDefault().getOutputStyle().name + "\n";
-	    script += "options[:line_comments] = " + (ScssSettings.getDefault().isLineCommentsEnabled() ? "true" : "false") + "\n";
-	    script += "options[:debug_info] = " + (ScssSettings.getDefault().isDebugInfoEnabled() ? "true" : "false") + "\n";
+	    script += "options[:style] = :" + outputStyle + "\n";
+	    script += "options[:line_comments] = " + ((lineComments)?"true":false) + "\n";
+	    script += "options[:debug_info] = " + ((debugInfo)?"true":false) + "\n";
 	    script += "options[:syntax] = " + (cssFilePath.endsWith(".scss") ? ":scss" : ":sass") + "\n";
 	    script += "input = File.new('" + cssFilePath + "', 'r')\n";
 	    script += "tree = ::Sass::Engine.new(input.read(), options).to_tree\n";
@@ -122,6 +131,11 @@ public class Engine {
 	    scriptingContainer.runScriptlet(script);
 
 	    String newfilename = fo.getParent().getPath() + File.separator + fo.getName() + ".css";
+
+	    //Allow output file to be specified in doc block
+	    newfilename = commentParser.getOutputFile(newfilename);
+
+	    io.getOut().println("Using file: "+newfilename);
 	    FileObject cssFo = Engine.write(newfilename, result.toString(), FileEncodingQuery.getEncoding(fo));
 	    cssFo.refresh(true);
 
