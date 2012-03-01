@@ -2,17 +2,14 @@ package org.netbeans.modules.languages.scss.parser;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.scss.engine.Engine;
 import org.netbeans.modules.scss.options.ScssSettings;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.NbBundle;
-import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
 
 class InvalidOutputStyleException extends Exception {
@@ -44,10 +41,10 @@ public class ScssDocblockParser {
 	private static int LINECOMMENTS = 1;
 	private static int OUTPUTSTYLE = 2;
 	private static int OUTPUTFILE = 3;
-	private Hashtable values = new Hashtable();
+	private HashMap values = new HashMap();
 	private static final int MAXLINENO = 30;
 	private static final int MAXLINESTART = 3;
-	private static final boolean DEBUGENABLED = true;
+	private static final boolean DEBUGENABLED = false;
 
 	public ScssDocblockParser(FileObject fo, InputOutput io) {
 		this.io = io;
@@ -150,7 +147,7 @@ public class ScssDocblockParser {
 		if (bcMatcher.find()) {
 			String blockName = bcMatcher.group(1);
 			String blockVal = bcMatcher.group(2);
-			io.getErr().println("@" + blockName + " " + blockVal);
+			debug("Found tag @" + blockName + " " + blockVal);
 
 			if (blockName.equals("outputFile")) {
 				values.put(OUTPUTFILE, sanitizeOutputFile(blockVal));
