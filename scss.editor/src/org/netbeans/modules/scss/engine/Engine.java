@@ -109,7 +109,7 @@ public class Engine {
 	    io.setFocusTaken(false);
 	    io.getOut().println(NbBundle.getMessage(Engine.class, "FMT_compilation_started", fo.getNameExt()));
 
-	    ScssDocblockParser commentParser = new ScssDocblockParser(fo);
+	    ScssDocblockParser commentParser = new ScssDocblockParser(fo,io);
 	    scriptingContainer.put("@result", result);
 
 	    //Set up variables, allowing globals to be overwritten by file specific doc blocks
