@@ -3,6 +3,7 @@ package org.netbeans.modules.languages.scss.parser;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -16,13 +17,6 @@ class InvalidOutputStyleException extends Exception {
 
 	InvalidOutputStyleException(String value) {
 		super("Invalid doc block value for SCSS outputStyle \"" + value + "\" (should be one of \"compressed\", \"expanded\", \"compact\" or \"nested\")");
-	}
-}
-
-class InvalidDocBlockException extends Exception {
-
-	InvalidDocBlockException(String value) {
-		super("Invalid format for SCSS doc block line \"" + value + "\" (expected format \"@blockName blockValue\")");
 	}
 }
 
@@ -41,7 +35,7 @@ public class ScssDocblockParser {
 	private static int LINECOMMENTS = 1;
 	private static int OUTPUTSTYLE = 2;
 	private static int OUTPUTFILE = 3;
-	private HashMap values = new HashMap();
+	private Map values = new HashMap();
 	private static final int MAXLINENO = 30;
 	private static final int MAXLINESTART = 3;
 	private static final boolean DEBUGENABLED = false;
@@ -68,7 +62,7 @@ public class ScssDocblockParser {
 	 */
 	private void debug(String text) {
 		if (DEBUGENABLED) {
-			io.getErr().println("ScssDocBlockParser: "+text);
+			io.getErr().println("ScssDocBlockParser: " + text);
 		}
 	}
 
@@ -88,8 +82,6 @@ public class ScssDocblockParser {
 					break;
 				}
 			}
-		} catch (InvalidDocBlockException idbe) {
-			io.getErr().println("Failed to parse SCSS doc block comment: " + idbe.getMessage());
 		} catch (InvalidOutputStyleException iose) {
 			io.getErr().println("Failed to parse SCSS doc block comment: " + iose.getMessage());
 		}
@@ -106,8 +98,7 @@ public class ScssDocblockParser {
 	 * @param lineno The current line number
 	 * @return void
 	 */
-	private void parseLine(String line, int lineno)
-	    throws InvalidDocBlockException, InvalidOutputStyleException {
+	private void parseLine(String line, int lineno) throws InvalidOutputStyleException {
 		if (inComment) {
 			if (lineno > MAXLINENO) {
 				complete = true;
@@ -141,7 +132,7 @@ public class ScssDocblockParser {
 	 * @throws InvalidOutputStyleException
 	 */
 	private void parseBlockComment(String line)
-	    throws InvalidDocBlockException, InvalidOutputStyleException {
+	    throws InvalidOutputStyleException {
 		Pattern bcRegex = Pattern.compile("[^@]*@([a-zA-Z0-9]+)\\s+([^\\s]+).*");
 		Matcher bcMatcher = bcRegex.matcher(line);
 		if (bcMatcher.find()) {
@@ -159,7 +150,7 @@ public class ScssDocblockParser {
 			} else if (blockName.equals("lineComments")) {
 				values.put(LINECOMMENTS, (blockVal.equals("true")) ? true : false);
 
-			//Check that the output style matches one of the allowed values
+				//Check that the output style matches one of the allowed values
 			} else if (blockName.equals("outputStyle")) {
 				if (blockVal.equals(ScssSettings.OutputStyle.COMPACT.name)
 				    || blockVal.equals(ScssSettings.OutputStyle.COMPRESSED.name)
@@ -172,8 +163,6 @@ public class ScssDocblockParser {
 			} else {
 				debug("Ignoring unknown doc block tag \"" + blockName + "\"");
 			}
-		} else {
-			throw new InvalidDocBlockException(line);
 		}
 	}
 
