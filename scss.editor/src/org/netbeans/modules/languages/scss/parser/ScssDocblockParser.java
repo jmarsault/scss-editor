@@ -3,6 +3,7 @@ package org.netbeans.modules.languages.scss.parser;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -34,7 +35,7 @@ public class ScssDocblockParser {
 	private static int LINECOMMENTS = 1;
 	private static int OUTPUTSTYLE = 2;
 	private static int OUTPUTFILE = 3;
-	private HashMap values = new HashMap();
+	private Map values = new HashMap();
 	private static final int MAXLINENO = 30;
 	private static final int MAXLINESTART = 3;
 	private static final boolean DEBUGENABLED = false;
