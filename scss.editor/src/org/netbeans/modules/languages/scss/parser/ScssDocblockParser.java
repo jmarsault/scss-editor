@@ -19,13 +19,6 @@ class InvalidOutputStyleException extends Exception {
 	}
 }
 
-class InvalidDocBlockException extends Exception {
-
-	InvalidDocBlockException(String value) {
-		super("Invalid format for SCSS doc block line \"" + value + "\" (expected format \"@blockName blockValue\")");
-	}
-}
-
 /**
  * Parse doc block comments at the top of SCSS files, to override global options.
  *
@@ -68,7 +61,7 @@ public class ScssDocblockParser {
 	 */
 	private void debug(String text) {
 		if (DEBUGENABLED) {
-			io.getErr().println("ScssDocBlockParser: "+text);
+			io.getErr().println("ScssDocBlockParser: " + text);
 		}
 	}
 
@@ -88,8 +81,6 @@ public class ScssDocblockParser {
 					break;
 				}
 			}
-		} catch (InvalidDocBlockException idbe) {
-			io.getErr().println("Failed to parse SCSS doc block comment: " + idbe.getMessage());
 		} catch (InvalidOutputStyleException iose) {
 			io.getErr().println("Failed to parse SCSS doc block comment: " + iose.getMessage());
 		}
@@ -106,8 +97,7 @@ public class ScssDocblockParser {
 	 * @param lineno The current line number
 	 * @return void
 	 */
-	private void parseLine(String line, int lineno)
-	    throws InvalidDocBlockException, InvalidOutputStyleException {
+	private void parseLine(String line, int lineno) throws InvalidOutputStyleException {
 		if (inComment) {
 			if (lineno > MAXLINENO) {
 				complete = true;
@@ -141,7 +131,7 @@ public class ScssDocblockParser {
 	 * @throws InvalidOutputStyleException
 	 */
 	private void parseBlockComment(String line)
-	    throws InvalidDocBlockException, InvalidOutputStyleException {
+	    throws InvalidOutputStyleException {
 		Pattern bcRegex = Pattern.compile("[^@]*@([a-zA-Z0-9]+)\\s+([^\\s]+).*");
 		Matcher bcMatcher = bcRegex.matcher(line);
 		if (bcMatcher.find()) {
@@ -159,7 +149,7 @@ public class ScssDocblockParser {
 			} else if (blockName.equals("lineComments")) {
 				values.put(LINECOMMENTS, (blockVal.equals("true")) ? true : false);
 
-			//Check that the output style matches one of the allowed values
+				//Check that the output style matches one of the allowed values
 			} else if (blockName.equals("outputStyle")) {
 				if (blockVal.equals(ScssSettings.OutputStyle.COMPACT.name)
 				    || blockVal.equals(ScssSettings.OutputStyle.COMPRESSED.name)
@@ -172,8 +162,6 @@ public class ScssDocblockParser {
 			} else {
 				debug("Ignoring unknown doc block tag \"" + blockName + "\"");
 			}
-		} else {
-			throw new InvalidDocBlockException(line);
 		}
 	}
 
