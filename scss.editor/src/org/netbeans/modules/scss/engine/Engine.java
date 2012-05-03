@@ -56,7 +56,6 @@ public class Engine {
 
     public void compile(final FileObject fo) {
         RequestProcessor.getDefault().post(new Runnable() {
-
             @Override
             public void run() {
                 ProgressHandle handle = ProgressHandleFactory.createSystemHandle(NbBundle.getMessage(Engine.class, "MSG_compile_scss"));
@@ -76,7 +75,6 @@ public class Engine {
 
     public void convert(final FileObject fo) {
         RequestProcessor.getDefault().post(new Runnable() {
-
             @Override
             public void run() {
                 ProgressHandle handle = ProgressHandleFactory.createSystemHandle(NbBundle.getMessage(Engine.class, "MSG_convert_to_scss"));
@@ -107,6 +105,7 @@ public class Engine {
         try {
             io.getOut().reset();
             io.setFocusTaken(false);
+            printVersions();
             io.getOut().println(NbBundle.getMessage(Engine.class, "FMT_compilation_started", fo.getNameExt()));
 
             ScssDocblockParser commentParser = new ScssDocblockParser(fo, io);
@@ -130,7 +129,7 @@ public class Engine {
             script += "@result.append(tree.render)" + "\n";
             scriptingContainer.runScriptlet(script);
 
-            String newfilename = fo.getParent().getPath() + File.separator + fo.getName() + ".css";
+            String newfilename = FileUtil.normalizePath(fo.getParent().getPath() + File.separator + fo.getName() + ".css");
 
             //Allow output file to be specified in doc block
             newfilename = commentParser.getOutputFile(newfilename);
@@ -159,6 +158,7 @@ public class Engine {
         try {
             io.getOut().reset();
             io.setFocusTaken(false);
+            printVersions();
             io.getOut().println(NbBundle.getMessage(Engine.class, "FMT_conversion_started", fo.getNameExt()));
 
             String filename = fo.getParent().getPath() + File.separator + fo.getName() + ".scss";
@@ -205,6 +205,7 @@ public class Engine {
         try {
             io.getOut().reset();
             io.setFocusTaken(false);
+            printVersions();
             io.getOut().println(NbBundle.getMessage(Engine.class, "FMT_conversion_started", fo.getNameExt()));
 
             String filename = fo.getParent().getPath() + File.separator + fo.getName() + ".scss";
@@ -270,5 +271,14 @@ public class Engine {
         }
         deps.append("]");
         return deps.toString();
+    }
+
+    private void printVersions() {
+        io.getOut().println("JRUBY_VERSION = "
+                + scriptingContainer.runScriptlet("JRUBY_VERSION"));
+        io.getOut().println("SASS version = "
+                + scriptingContainer.runScriptlet("require 'sass'\n::Sass::VERSION"));
+        io.getOut().println("Loaded paths" + scriptingContainer.getLoadPaths());
+        io.getOut().println("---------------------------------------\n");
     }
 }
