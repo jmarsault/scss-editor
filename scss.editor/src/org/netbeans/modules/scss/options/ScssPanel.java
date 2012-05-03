@@ -96,8 +96,6 @@ final class ScssPanel extends javax.swing.JPanel {
                 .addContainerGap(35, Short.MAX_VALUE))
         );
 
-        jLabel2.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.jLabel2.AccessibleContext.accessibleName")); // NOI18N
-
         lblHamlVersion.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.lblHamlVersion.text")); // NOI18N
 
         btnBrowseSassPath.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.btnBrowseSassPath.text")); // NOI18N
