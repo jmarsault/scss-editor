@@ -23,108 +23,109 @@ public class ScssSettings {
     private Preferences prefs = null;
 
     private ScssSettings() {
-	prefs = NbPreferences.forModule(ScssSettings.class);
+        prefs = NbPreferences.forModule(ScssSettings.class);
     }
 
     public static synchronized ScssSettings getDefault() {
-	if (scssSettings == null) {
-	    scssSettings = new ScssSettings();
-	}
-	return scssSettings;
+        if (scssSettings == null) {
+            scssSettings = new ScssSettings();
+        }
+        return scssSettings;
     }
 
     public String getSassPath() {
-	return prefs.get(PROP_SASS_PATH, null);
+        return prefs.get(PROP_SASS_PATH, null);
     }
 
     public final void setHamlPath(String path) {
-	prefs.put(PROP_SASS_PATH, path);
+        prefs.put(PROP_SASS_PATH, path);
     }
 
     public OutputStyle getOutputStyle() {
-	String style = prefs.get(PROP_OUTPUT_STYLE, Integer.toString(OutputStyle.EXPANDED.id));
-	return OutputStyle.valueOf(Integer.valueOf(style));
+        String style = prefs.get(PROP_OUTPUT_STYLE, Integer.toString(OutputStyle.EXPANDED.id));
+        return OutputStyle.valueOf(Integer.valueOf(style));
     }
 
     public final void setOutputStyle(Integer style) {
-	prefs.put(PROP_OUTPUT_STYLE, style.toString());
+        prefs.put(PROP_OUTPUT_STYLE, style.toString());
     }
 
     public boolean isCompileOnSave() {
-	return prefs.getBoolean(PROP_COMPILE_ON_SAVE, false);
+        return prefs.getBoolean(PROP_COMPILE_ON_SAVE, false);
     }
 
     public void setCompileOnSave(boolean b) {
-	prefs.putBoolean(PROP_COMPILE_ON_SAVE, b);
+        prefs.putBoolean(PROP_COMPILE_ON_SAVE, b);
     }
 
     public boolean isLineCommentsEnabled() {
-	return prefs.getBoolean(PROP_COMMENTS_ENABLED, false);
+        return prefs.getBoolean(PROP_COMMENTS_ENABLED, false);
     }
 
     public void setLineCommentsEnabled(boolean b) {
-	prefs.putBoolean(PROP_COMMENTS_ENABLED, b);
+        prefs.putBoolean(PROP_COMMENTS_ENABLED, b);
     }
 
     public boolean isDebugInfoEnabled() {
-	return prefs.getBoolean(PROP_DEBUG_INFO_ENABLED, false);
+        return prefs.getBoolean(PROP_DEBUG_INFO_ENABLED, false);
     }
 
     public void setDebugInfoEnabled(boolean b) {
-	prefs.putBoolean(PROP_DEBUG_INFO_ENABLED, b);
+        prefs.putBoolean(PROP_DEBUG_INFO_ENABLED, b);
     }
 
     protected static String getHamlVersion(File file) {
-	String version = null;
-	try {
-	    File fileVersion = new File(file, "VERSION");
+        String version = null;
+        try {
+            File fileVersion = new File(file, "VERSION");
 
-	    if (fileVersion != null) {
-		InputStream is = FileUtil.toFileObject(fileVersion).getInputStream();
-		try {
-		    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		    version = br.readLine();
-		} finally {
-		    is.close();
-		}
-	    }
-	} catch (IOException x) {
-	    // ignore for now
-	}
-	return version;
+            if (fileVersion != null && fileVersion.canRead()) {
+                InputStream is = FileUtil.toFileObject(fileVersion).getInputStream();
+                try {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    version = br.readLine();
+                } finally {
+                    is.close();
+                }
+            }
+        } catch (IOException x) {
+            // ignore for now
+        }
+        return version;
     }
 
     public static enum OutputStyle {
 
-	COMPACT(0, "compact"),
-	COMPRESSED(1, "compressed"),
-	EXPANDED(2, "expanded"),
-	NESTED(3, "nested");
-	public int id;
-	public String name;
+        COMPACT(0, "compact"),
+        COMPRESSED(1, "compressed"),
+        EXPANDED(2, "expanded"),
+        NESTED(3, "nested");
+        public int id;
+        public String name;
 
-	private OutputStyle(int id, String name) {
-	    this.id = id;
-	    this.name = name;
-	}
+        private OutputStyle(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
 
-	public static OutputStyle valueOf(int id) {
-	    OutputStyle[] values = values();
-	    for (OutputStyle value : values) {
-		if (value.id == id) {
-		    return value;
-		}
-	    }
-	    throw new IllegalArgumentException("The id " + id + " is not recognized");
-	}
+        public static OutputStyle valueOf(int id) {
+            OutputStyle[] values = values();
+            for (OutputStyle value : values) {
+                if (value.id == id) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("The id " + id + " is not recognized");
+        }
     }
 
     public static void checkInstall() throws Exception {
-	if (ScssSettings.getDefault().getSassPath() == null
-		|| ScssSettings.getDefault().getSassPath().isEmpty()) {
+        String sassPath = ScssSettings.getDefault().getSassPath();
+        if (sassPath == null || sassPath.isEmpty()
+                || ScssSettings.getHamlVersion(new File(sassPath)) == null) {
 //	    OptionsDisplayer.getDefault().open(OptionsDisplayer.ADVANCED + "/Scss");
-	    OptionsDisplayer.getDefault().open("Advanced/Scss");
-	    throw new Exception(NbBundle.getMessage(ScssSettings.class, "ERR_NoValidInstallation"));
-	}
+            OptionsDisplayer.getDefault().open("Advanced/Scss");
+            throw new Exception(NbBundle.getMessage(ScssSettings.class, "ERR_NoValidInstallation"));
+        }
     }
 }
