@@ -38,9 +38,9 @@ final class ScssPanel extends javax.swing.JPanel {
         lblSassPath = new javax.swing.JLabel();
         txtSassPath = new javax.swing.JTextField();
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.jLabel2.text")); // NOI18N
+        jLabel2.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.jLabel2.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbCompileOnSave, org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.cbCompileOnSave.text")); // NOI18N
+        cbCompileOnSave.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.cbCompileOnSave.text")); // NOI18N
         cbCompileOnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbCompileOnSaveActionPerformed(evt);
@@ -49,14 +49,14 @@ final class ScssPanel extends javax.swing.JPanel {
 
         cbOutputStyle.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "compact", "compressed", "expanded", "nested" }));
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbLineComments, org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.cbLineComments.text")); // NOI18N
+        cbLineComments.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.cbLineComments.text")); // NOI18N
         cbLineComments.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbLineCommentsActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbDebugInfo, org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.cbDebugInfo.text")); // NOI18N
+        cbDebugInfo.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.cbDebugInfo.text")); // NOI18N
         cbDebugInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbDebugInfoActionPerformed(evt);
@@ -96,16 +96,18 @@ final class ScssPanel extends javax.swing.JPanel {
                 .addContainerGap(35, Short.MAX_VALUE))
         );
 
-        org.openide.awt.Mnemonics.setLocalizedText(lblHamlVersion, org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.lblHamlVersion.text")); // NOI18N
+        jLabel2.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.jLabel2.AccessibleContext.accessibleName")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(btnBrowseSassPath, org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.btnBrowseSassPath.text")); // NOI18N
+        lblHamlVersion.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.lblHamlVersion.text")); // NOI18N
+
+        btnBrowseSassPath.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.btnBrowseSassPath.text")); // NOI18N
         btnBrowseSassPath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBrowseSassPathActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(lblSassPath, org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.lblSassPath.text")); // NOI18N
+        lblSassPath.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.lblSassPath.text")); // NOI18N
 
         txtSassPath.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.txtSassPath.text")); // NOI18N
         txtSassPath.setMaximumSize(new java.awt.Dimension(6, 20));

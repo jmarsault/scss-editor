@@ -1,4 +1,4 @@
-<?xml version="1.1" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
@@ -85,6 +85,14 @@
               <ResourceString bundle="org/netbeans/modules/scss/options/Bundle.properties" key="ScssPanel.jLabel2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="org/netbeans/modules/scss/options/Bundle.properties" key="ScssPanel.jLabel2.AccessibleContext.accessibleName" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </AccessibilityProperties>
+          <AuxValues>
+            <AuxValue name="generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbCompileOnSave">
           <Properties>
@@ -95,6 +103,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbCompileOnSaveActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JComboBox" name="cbOutputStyle">
           <Properties>
@@ -117,6 +128,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbLineCommentsActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbDebugInfo">
           <Properties>
@@ -127,6 +141,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbDebugInfoActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
@@ -176,6 +193,9 @@
               <ResourceString bundle="org/netbeans/modules/scss/options/Bundle.properties" key="ScssPanel.lblHamlVersion.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnBrowseSassPath">
           <Properties>
@@ -186,6 +206,9 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBrowseSassPathActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="lblSassPath">
           <Properties>
@@ -193,6 +216,9 @@
               <ResourceString bundle="org/netbeans/modules/scss/options/Bundle.properties" key="ScssPanel.lblSassPath.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JTextField" name="txtSassPath">
           <Properties>
