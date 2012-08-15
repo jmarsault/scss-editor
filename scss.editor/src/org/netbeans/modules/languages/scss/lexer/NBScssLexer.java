@@ -19,35 +19,35 @@ public class NBScssLexer implements Lexer<ScssTokenId> {
 
     @Override
     public Object state() {
-	return null;
+        return null;
     }
 
     public NBScssLexer(LexerRestartInfo<ScssTokenId> info) {
-	this.info = info;
-	lexer = new ScssLookAhead(info);
+        this.info = info;
+        lexer = new ScssLookAhead(info);
     }
 
     @Override
     public org.netbeans.api.lexer.Token<ScssTokenId> nextToken() {
 
-	org.netbeans.api.lexer.Token<ScssTokenId> result = null;
-	ScssTokenId tokenId = ScssLanguageHierarchy.getToken(ScssLexer.WS);
-	Token token = lexer.nextToken();
+        org.netbeans.api.lexer.Token<ScssTokenId> result = null;
+        ScssTokenId tokenId = (ScssTokenId) ScssLanguageHierarchy.getToken(ScssLexer.WS);
+        Token token = lexer.nextToken();
 
-	if (token.getType() != ScssLexer.EOF) {
-	    tokenId = ScssLanguageHierarchy.getToken(token.getType());
-	    if (tokenId != null) {
-		result = info.tokenFactory().createToken(tokenId);
-	    } else {
-		result = info.tokenFactory().createToken(ScssLanguageHierarchy.getToken(ScssLexer.WS));
-	    }
-	} else if (info.input().readLength() > 0) {
-	    tokenId = ScssLanguageHierarchy.getToken(ScssLexer.WS);
-	    result = info.tokenFactory().createToken(tokenId, info.input().readLength(),
-		    PartType.MIDDLE);
-	}
+        if (token.getType() != ScssLexer.EOF) {
+            tokenId = (ScssTokenId) ScssLanguageHierarchy.getToken(token.getType());
+            if (tokenId != null) {
+                result = info.tokenFactory().createToken(tokenId);
+            } else {
+                result = info.tokenFactory().createToken((ScssTokenId) ScssLanguageHierarchy.getToken(ScssLexer.WS));
+            }
+        } else if (info.input().readLength() > 0) {
+            tokenId = (ScssTokenId) ScssLanguageHierarchy.getToken(ScssLexer.WS);
+            result = info.tokenFactory().createToken(tokenId, info.input().readLength(),
+                    PartType.MIDDLE);
+        }
 
-	return result;
+        return result;
     }
 
     @Override

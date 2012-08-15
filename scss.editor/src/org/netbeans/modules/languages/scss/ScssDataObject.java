@@ -1,6 +1,8 @@
 package org.netbeans.modules.languages.scss;
 
 import java.io.IOException;
+import org.netbeans.core.spi.multiview.MultiViewElement;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataNode;
 import org.openide.loaders.DataObjectExistsException;
@@ -14,6 +16,8 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.nodes.Node.Cookie;
+import org.openide.util.NbBundle.Messages;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -25,50 +29,66 @@ public class ScssDataObject extends MultiDataObject {
     private InstanceContent ic;
     CookieSet cookies;
 
+    protected int associateLookup() {
+        return 1;
+    }
+
+    @Messages("Source=&Source")
+    @MultiViewElement.Registration(
+            displayName = "#Source",
+    iconBase = "org/netbeans/modules/languages/scss/Scss.png",
+    persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+    mimeType = "text/x-scss",
+    preferredID = "scss.source",
+    position = 1)
+    public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
+        return new MultiViewEditorElement(context);
+    }
+
     public ScssDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException, IOException {
-	super(fo, loader);
-	cookies = getCookieSet();
+        super(fo, loader);
+        cookies = getCookieSet();
     }
 
     @Override
     protected Node createNodeDelegate() {
-	final DataNode node = new DataNode(this, Children.LEAF, getLookup());
-	return node;
+        final DataNode node = new DataNode(this, Children.LEAF, getLookup());
+        return node;
     }
 
     @Override
     public final synchronized Lookup getLookup() {
-	if (lookup == null) {
-	    ic = new InstanceContent();
-	    ic.add(this);
-	    ic.add(getPrimaryFile());
-	    ic.add(this, ScssEditorSupportProvider.staticFactory);
-	    lookup = new ProxyLookup(getCookieSet().getLookup(), new AbstractLookup(ic));
-	}
-	return lookup;
+        if (lookup == null) {
+            ic = new InstanceContent();
+            ic.add(this);
+            ic.add(getPrimaryFile());
+            ic.add(this, ScssEditorSupportProvider.staticFactory);
+            lookup = new ProxyLookup(getCookieSet().getLookup(), new AbstractLookup(ic));
+        }
+        return lookup;
     }
 
     final InstanceContent getInstanceContent() {
-	return ic;
+        return ic;
     }
 
     @Override
     public final <T extends Cookie> T getCookie(Class<T> type) {
-	if (!Cookie.class.isAssignableFrom(type)) {
-	    Exception exception = new Exception("Class " + Cookie.class.getName() + " does not AssignableFrom " + type.getName()); //NOI18N
+        if (!Cookie.class.isAssignableFrom(type)) {
+            Exception exception = new Exception("Class " + Cookie.class.getName() + " does not AssignableFrom " + type.getName()); //NOI18N
 //	    LOG.log(Level.INFO, exception.getMessage(), exception);
-	    return null;
-	}
-	Object lookupResult = getLookup().lookup(type);
-	if (lookupResult != null) {
-	    if (!type.isInstance(lookupResult)) {
-		Exception exception = new Exception("Class " + lookupResult.getClass().getName() + " is not instance of " + type.getName()); //NOI18N
+            return null;
+        }
+        Object lookupResult = getLookup().lookup(type);
+        if (lookupResult != null) {
+            if (!type.isInstance(lookupResult)) {
+                Exception exception = new Exception("Class " + lookupResult.getClass().getName() + " is not instance of " + type.getName()); //NOI18N
 //		LOG.log(Level.INFO, exception.getMessage(), exception);
-		return null;
-	    }
-	}
-	@SuppressWarnings("unchecked")
-	T res = (T) lookupResult;
-	return res;
+                return null;
+            }
+        }
+        @SuppressWarnings("unchecked")
+        T res = (T) lookupResult;
+        return res;
     }
 }

@@ -10,6 +10,9 @@ import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.languages.scss.antlr.ScssLexer;
 import org.netbeans.modules.languages.scss.antlr.ScssParser;
+import org.netbeans.modules.scss.lib.AbstractParseTreeNode;
+import org.netbeans.modules.scss.lib.api.Node;
+import org.netbeans.modules.scss.lib.api.NodeType;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
@@ -29,21 +32,21 @@ public class NBScssParser extends Parser {
     private CommonTokenStream tokens;
 
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {
-	this.snapshot = snapshot;
-	ANTLRStringStream input = new ANTLRStringStream(snapshot.getText().toString());
-	lexer = new ScssLexer(input);
-	tokens = new CommonTokenStream(lexer);
-	parser = new ScssParser(tokens);
-	try {
-	    ScssParser.stylesheet_return ret = parser.stylesheet();
-	    tree = (CommonTree) ret.getTree();
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
+        this.snapshot = snapshot;
+        ANTLRStringStream input = new ANTLRStringStream(snapshot.getText().toString());
+        lexer = new ScssLexer(input);
+        tokens = new CommonTokenStream(lexer);
+        parser = new ScssParser(tokens);
+        try {
+            ScssParser.stylesheet_return ret = parser.stylesheet();
+            tree = (CommonTree) ret.getTree();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public Result getResult(Task task) {
-	return new ScssEditorParserResult(snapshot, parser, lexer, tree, tokens);
+        return new ScssEditorParserResult(snapshot, parser, lexer, tree, tokens);
     }
 
     public void cancel() {
@@ -57,48 +60,80 @@ public class NBScssParser extends Parser {
 
     public static class ScssEditorParserResult extends ParserResult {
 
-	private ScssParser parser;
-	private ScssLexer lexer;
-	private CommonTree tree;
-	private CommonTokenStream tokens;
-	private boolean valid = true;
+        private ScssParser parser;
+        private ScssLexer lexer;
+        private CommonTree tree;
+        private CommonTokenStream tokens;
+        private boolean valid = true;
 
-	ScssEditorParserResult(Snapshot snapshot, ScssParser parser, ScssLexer lexer, CommonTree tree, CommonTokenStream tokens) {
-	    super(snapshot);
-	    this.parser = parser;
-	    this.lexer = lexer;
-	    this.tree = tree;
-	    this.tokens = tokens;
-	}
+        ScssEditorParserResult(Snapshot snapshot, ScssParser parser, ScssLexer lexer, CommonTree tree, CommonTokenStream tokens) {
+            super(snapshot);
 
-	public ScssParser getScssParser()
-		throws ParseException {
-	    if (!valid) {
-		throw new ParseException();
-	    }
-	    return parser;
-	}
+            this.parser = parser;
+            this.lexer = lexer;
+            this.tree = tree;
+            this.tokens = tokens;
+        }
 
-	public ScssLexer getLexer() {
-	    return lexer;
-	}
+        public ScssParser getScssParser()
+                throws ParseException {
+            if (!valid) {
+                throw new ParseException();
+            }
+            return parser;
+        }
 
-	public CommonTree getTree() {
-	    return tree;
-	}
+        public ScssLexer getLexer() {
+            return lexer;
+        }
 
-	public CommonTokenStream getTokens() {
-	    return tokens;
-	}
+        public CommonTree getTree() {
+            return tree;
+        }
 
-	@Override
-	protected void invalidate() {
-	    valid = false;
-	}
+        public CommonTokenStream getTokens() {
+            return tokens;
+        }
 
-	@Override
-	public List<? extends Error> getDiagnostics() {
-	    return Collections.<Error>emptyList();
-	}
+        @Override
+        protected void invalidate() {
+            valid = false;
+        }
+
+        @Override
+        public List<? extends Error> getDiagnostics() {
+            return Collections.<Error>emptyList();
+        }
+
+        public Node getParseTree() {
+            return new AbstractParseTreeNodeImpl(this.getSnapshot().getText());
+        }
+
+        private class AbstractParseTreeNodeImpl extends AbstractParseTreeNode {
+
+            private AbstractParseTreeNodeImpl(CharSequence text) {
+                super(text);
+            }
+
+            @Override
+            public int from() {
+                return this.from();
+            }
+
+            @Override
+            public int to() {
+                return this.to();
+            }
+
+            @Override
+            public String name() {
+                return this.name();
+            }
+
+            @Override
+            public NodeType type() {
+                return this.type();
+            }
+        }
     }
 }

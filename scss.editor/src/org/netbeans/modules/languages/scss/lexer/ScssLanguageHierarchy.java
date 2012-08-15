@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.netbeans.api.lexer.TokenId;
 import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
@@ -28,7 +29,7 @@ public final class ScssLanguageHierarchy extends LanguageHierarchy<ScssTokenId> 
 	}
     }
 
-    protected static synchronized ScssTokenId getToken(int id) {
+    public static synchronized TokenId getToken(int id) {
 	return idToToken.get(id);
     }
 
