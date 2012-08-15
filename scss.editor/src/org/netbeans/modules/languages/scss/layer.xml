@@ -62,23 +62,7 @@
     </folder>
 
     <folder name="Loaders">
-        <folder name="text">
-            <folder name="x-css">
-                <folder name="Actions">
-                    <file name="org-netbeans-modules-scss-actions-ConvertAction-separatorAfter.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="895"/>
-                    </file>
-                    <file name="org-netbeans-modules-scss-actions-ConvertAction-separatorBefore.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="885"/>
-                    </file>
-                    <file name="org-netbeans-modules-scss-actions-ConvertAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/BpelNodes/org-netbeans-modules-scss-actions-ConvertAction.instance"/>
-                        <attr name="position" intvalue="890"/>
-                    </file>
-                </folder>
-            </folder>
+        <folder name="text">            
             <folder name="x-scss">
                 <folder name="Actions">
                     <file name="org-netbeans-modules-scss-actions-CompileAction-separatorAfter.instance">
@@ -159,22 +143,6 @@
                     </file>
                 </folder>
             </folder>
-        </folder>
-    </folder>
-    <folder name="Menu">
-        <folder name="BuildProject">
-            <file name="org-netbeans-modules-scss-actions-CompileAction-separatorAfter.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="975"/>
-            </file>
-            <file name="org-netbeans-modules-scss-actions-CompileAction-separatorBefore.instance">
-                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="925"/>
-            </file>
-            <file name="org-netbeans-modules-scss-actions-CompileAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Build/org-netbeans-modules-scss-actions-CompileAction.instance"/>
-                <attr name="position" intvalue="950"/>
-            </file>
         </folder>
     </folder>
     <folder name="Navigator">
