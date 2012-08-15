@@ -1,7 +1,6 @@
 package org.netbeans.modules.scss.engine;
 
 import java.awt.Color;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +12,7 @@ import java.util.Enumeration;
 import java.util.List;
 import org.jruby.embed.ScriptingContainer;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.languages.scss.parser.ScssDocblockParser;
 import org.netbeans.modules.scss.options.ScssSettings;
@@ -43,7 +43,12 @@ public class Engine {
     private static synchronized ScriptingContainer initScriptingContainer() throws Exception {
         if (scriptingContainer == null) {
             ScssSettings.checkInstall();
-            File root = new File(ScssSettings.getDefault().getSassPath());
+            File root;
+            if (ScssSettings.getDefault().isBundleVersion()) {
+                root = new File(ScssSettings.getDefault().getBundlePath());
+            } else {
+                root = new File(ScssSettings.getDefault().getSassPath());
+            }
             String libPath = root.getAbsolutePath() + File.separator + "lib";
             List<String> loadPaths = new ArrayList();
             loadPaths.add(libPath);
@@ -274,11 +279,18 @@ public class Engine {
     }
 
     private void printVersions() {
-        io.getOut().println("JRUBY_VERSION = "
-                + scriptingContainer.runScriptlet("JRUBY_VERSION"));
-        io.getOut().println("SASS version = "
-                + scriptingContainer.runScriptlet("require 'sass'\n::Sass::VERSION"));
-        io.getOut().println("Loaded paths" + scriptingContainer.getLoadPaths());
+        StringBuilder sassVersion = new StringBuilder();
+        sassVersion.append("JRUBY_VERSION = ");
+        sassVersion.append(scriptingContainer.runScriptlet("JRUBY_VERSION"));
+        sassVersion.append("\nSASS version = ");
+        sassVersion.append(scriptingContainer.runScriptlet("require 'sass'\n::Sass::VERSION"));
+        if (ScssSettings.getDefault().isBundleVersion()) {
+            sassVersion.append(" Bundled");
+        } else {
+            sassVersion.append("\nLoaded paths ");
+            sassVersion.append(scriptingContainer.getLoadPaths());
+        }
+        io.getOut().println(sassVersion);
         io.getOut().println("---------------------------------------\n");
     }
 }

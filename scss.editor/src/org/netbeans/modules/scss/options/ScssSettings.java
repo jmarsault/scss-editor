@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.InstalledFileLocator;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -20,7 +22,10 @@ public class ScssSettings {
     private static final String PROP_DEBUG_INFO_ENABLED = "debugInfoEnabled";
     private static final String PROP_OUTPUT_STYLE = "outputStyle";
     private static final long serialVersionUID = 85176380568174L;
+    private static final String PROP_BUNDLE_USED = "bundleUsed";
+    private static final String BUNDLE_VERSION = "sass-3.1.20";
     private Preferences prefs = null;
+    private static final Logger LOGGER = Logger.getLogger(ScssSettings.class.getName());
 
     private ScssSettings() {
         prefs = NbPreferences.forModule(ScssSettings.class);
@@ -31,6 +36,25 @@ public class ScssSettings {
             scssSettings = new ScssSettings();
         }
         return scssSettings;
+    }
+
+    public String getBundlePath() {
+        File file = InstalledFileLocator.getDefault().locate(BUNDLE_VERSION, "org.netbeans.modules.languages.scss", false); //NoI18N
+
+        if (file != null && file.canRead()) {
+            return file.getAbsolutePath();
+        } else {
+            LOGGER.warning(String.format("Cannot locate the Sass bundled installation '%s'.", BUNDLE_VERSION)); //NOI18N
+        }
+        return null;
+    }
+
+    public boolean isBundleVersion() {
+        return prefs.getBoolean(PROP_BUNDLE_USED, true);
+    }
+
+    public void setBundle(boolean selected) {
+        prefs.putBoolean(PROP_BUNDLE_USED, selected);
     }
 
     public String getSassPath() {
@@ -74,7 +98,7 @@ public class ScssSettings {
         prefs.putBoolean(PROP_DEBUG_INFO_ENABLED, b);
     }
 
-    protected static String getHamlVersion(File file) {
+    protected static String getSassVersion(File file) {
         String version = null;
         try {
             File fileVersion = new File(file, "VERSION");
@@ -92,6 +116,10 @@ public class ScssSettings {
             // ignore for now
         }
         return version;
+    }
+
+    protected static String getBundleVersion() {
+        return getSassVersion(new File(ScssSettings.getDefault().getBundlePath()));
     }
 
     public static enum OutputStyle {
@@ -120,12 +148,14 @@ public class ScssSettings {
     }
 
     public static void checkInstall() throws Exception {
-        String sassPath = ScssSettings.getDefault().getSassPath();
-        if (sassPath == null || sassPath.isEmpty()
-                || ScssSettings.getHamlVersion(new File(sassPath)) == null) {
+        if (!ScssSettings.getDefault().isBundleVersion()) {
+            String sassPath = ScssSettings.getDefault().getSassPath();
+            if (sassPath == null || sassPath.isEmpty()
+                    || ScssSettings.getSassVersion(new File(sassPath)) == null) {
 //	    OptionsDisplayer.getDefault().open(OptionsDisplayer.ADVANCED + "/Scss");
-            OptionsDisplayer.getDefault().open("Advanced/Scss");
-            throw new Exception(NbBundle.getMessage(ScssSettings.class, "ERR_NoValidInstallation"));
+                OptionsDisplayer.getDefault().open("Advanced/Scss");
+                throw new Exception(NbBundle.getMessage(ScssSettings.class, "ERR_NoValidInstallation"));
+            }
         }
     }
 }
