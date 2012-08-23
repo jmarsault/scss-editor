@@ -55,6 +55,7 @@ final class ScssPanel extends javax.swing.JPanel implements ChangeListener {
         jLabel4 = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
         lbl_help = new javax.swing.JLabel();
+        cbEnableCompass = new javax.swing.JCheckBox();
 
         lblExternalVersion.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.lblExternalVersion.text")); // NOI18N
 
@@ -123,6 +124,13 @@ final class ScssPanel extends javax.swing.JPanel implements ChangeListener {
             }
         });
 
+        cbEnableCompass.setText(org.openide.util.NbBundle.getMessage(ScssPanel.class, "ScssPanel.cbEnableCompass.text")); // NOI18N
+        cbEnableCompass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbEnableCompassActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -167,15 +175,14 @@ final class ScssPanel extends javax.swing.JPanel implements ChangeListener {
                                 .addComponent(cbLineComments)
                                 .addGap(52, 52, 52)
                                 .addComponent(cbDebugInfo))
-                            .addComponent(cbCompileOnSave))
+                            .addComponent(cbCompileOnSave)
+                            .addComponent(cbEnableCompass))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSeparator5))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_help, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbl_help, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -223,7 +230,9 @@ final class ScssPanel extends javax.swing.JPanel implements ChangeListener {
                     .addComponent(cbDebugInfo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbCompileOnSave)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbEnableCompass)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                 .addComponent(lbl_help, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -292,6 +301,7 @@ final class ScssPanel extends javax.swing.JPanel implements ChangeListener {
         cbCompileOnSave.setSelected(ScssSettings.getDefault().isCompileOnSave());
         cbLineComments.setSelected(ScssSettings.getDefault().isLineCommentsEnabled());
         cbDebugInfo.setSelected(ScssSettings.getDefault().isDebugInfoEnabled());
+	cbEnableCompass.setSelected(ScssSettings.getDefault().useCompass());
         cbOutputStyle.setSelectedIndex(ScssSettings.getDefault().getOutputStyle().id);
 //        jRExternalRuntime.setSelected(true);
         txtSassPath.setVisible(jRExternalRuntime.isSelected());
@@ -308,7 +318,12 @@ final class ScssPanel extends javax.swing.JPanel implements ChangeListener {
         ScssSettings.getDefault().setOutputStyle(cbOutputStyle.getSelectedIndex());
         ScssSettings.getDefault().setBundle(jRBundledRuntime.isSelected());
 	ScssSettings.getDefault().setUseSystemSass(jRSystemRuntime.isSelected());
+	ScssSettings.getDefault().setUseCompass(cbEnableCompass.isSelected());
     }
+
+    private void cbEnableCompassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCompileOnSave1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbCompileOnSave1ActionPerformed
 
     boolean valid() {
         // TODO check whether form is consistent and complete
@@ -343,6 +358,7 @@ final class ScssPanel extends javax.swing.JPanel implements ChangeListener {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbCompileOnSave;
     private javax.swing.JCheckBox cbDebugInfo;
+    private javax.swing.JCheckBox cbEnableCompass;
     private javax.swing.JCheckBox cbLineComments;
     private javax.swing.JComboBox cbOutputStyle;
     private javax.swing.JLabel jLabel1;

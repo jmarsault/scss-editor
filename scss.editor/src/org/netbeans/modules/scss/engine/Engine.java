@@ -131,9 +131,15 @@ public class Engine {
             boolean lineComments = commentParser.isLineCommentsEnabled(settings.isLineCommentsEnabled());
             String outputStyle = commentParser.getOutputStyle(settings.getOutputStyle().name);
 
-            String script = "require 'sass'\n";
-            script += "options = {}\n";
+            String script = "options = {}\n";
+            script += "require 'sass'\n";
             script += "options[:load_paths] = " + findDependencies(fo) + "\n";
+            if(ScssSettings.getDefault().useCompass()) {
+                script += "require 'compass'\n";
+                script += "Compass.add_project_configuration \n";
+                script += "Compass.configuration.project_path ||= Dir.pwd \n";
+                script += "options[:load_paths] += Compass.configuration.sass_load_paths \n";
+            }
             script += "options[:style] = :" + outputStyle + "\n";
             script += "options[:line_comments] = " + ((lineComments) ? "true" : false) + "\n";
             script += "options[:debug_info] = " + ((debugInfo) ? "true" : false) + "\n";

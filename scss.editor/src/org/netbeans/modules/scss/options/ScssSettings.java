@@ -27,6 +27,7 @@ public class ScssSettings {
     private static final String PROP_DEBUG_INFO_ENABLED = "debugInfoEnabled";
     private static final String PROP_OUTPUT_STYLE = "outputStyle";
     private static final String PROP_SYSTEM_SASS = "systemSass";
+    private static final String PROP_USE_COMPASS = "useCompass";
     private static final long serialVersionUID = 85176380568174L;
     private static final String PROP_BUNDLE_USED = "bundleUsed";
     private static final String BUNDLE_VERSION = "sass-3.1.20";
@@ -111,6 +112,14 @@ public class ScssSettings {
     public void setUseSystemSass(boolean b) {
         prefs.putBoolean(PROP_SYSTEM_SASS, b);
         prefs.put(PROP_SASS_PATH, getRubyLoadPaths(":"));
+    }
+
+    public boolean useCompass() {
+        return prefs.getBoolean(PROP_USE_COMPASS, false);
+    }
+
+    public void setUseCompass(boolean b) {
+        prefs.putBoolean(PROP_USE_COMPASS, b);
     }
 
     protected static String getSassVersion(File file) {
