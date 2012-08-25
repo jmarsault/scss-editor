@@ -23,7 +23,7 @@ final class ScssPanel extends javax.swing.JPanel implements ChangeListener {
         jRSystemRuntime.addChangeListener(this);
 	jRSystemRuntime.setSelected(ScssSettings.getDefault().useSystemSass());
         jRBundledRuntime.setSelected(ScssSettings.getDefault().isBundleVersion());
-        jRExternalRuntime.setSelected(!jRBundledRuntime.isSelected());
+        jRExternalRuntime.setSelected(!jRBundledRuntime.isSelected() && ! jRSystemRuntime.isSelected());
         // TODO listen to changes in form fields and call controller.changed()
     }
 
@@ -285,13 +285,6 @@ final class ScssPanel extends javax.swing.JPanel implements ChangeListener {
         displayVersion();
         }
     }//GEN-LAST:event_btnBrowseSassPathActionPerformed
-
-    private void cbSystemSassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSystemSassActionPerformed
-//        txtSassPath.setEnabled(! jRSystemRuntime.isSelected());
-//        btnBrowseSassPath.setEnabled(! jRSystemRuntime.isSelected());
-//        displayVersion();
-//        txtSassPath.setText(ScssSettings.getDefault().getSassPath());
-    }//GEN-LAST:event_cbSystemSassActionPerformed
 
     void load() {
         txtSassPath.setText(ScssSettings.getDefault().getSassPath());
