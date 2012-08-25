@@ -143,7 +143,12 @@ public class ScssSettings {
     }
 
     protected static String getBundleVersion() {
-        return getSassVersion(new File(ScssSettings.getDefault().getBundlePath()));
+        try {
+            return getSassVersion(new File(ScssSettings.getDefault().getBundlePath()));
+        }
+        catch(Exception e) {
+        }
+        return "";
     }
 
     protected static String getSystemSassVersion() {
