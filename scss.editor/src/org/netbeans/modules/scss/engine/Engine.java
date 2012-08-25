@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import org.jruby.embed.ScriptingContainer;
@@ -42,16 +43,24 @@ public class Engine {
 
     private static synchronized ScriptingContainer initScriptingContainer() throws Exception {
         if (scriptingContainer == null) {
-            ScssSettings.checkInstall();
-            File root;
-            if (ScssSettings.getDefault().isBundleVersion()) {
-                root = new File(ScssSettings.getDefault().getBundlePath());
-            } else {
-                root = new File(ScssSettings.getDefault().getSassPath());
-            }
-            String libPath = root.getAbsolutePath() + File.separator + "lib";
             List<String> loadPaths = new ArrayList();
-            loadPaths.add(libPath);
+            ScssSettings.checkInstall();
+            String sassPath = ScssSettings.getDefault().getSassPath();
+
+            if(ScssSettings.getDefault().useSystemSass()) {
+                String[] paths = sassPath.split(":");
+                loadPaths.addAll(Arrays.asList(paths));
+            }
+            else {
+                File root;
+                if (ScssSettings.getDefault().isBundleVersion()) {
+                    root = new File(ScssSettings.getDefault().getBundlePath());
+                } else {
+                    root = new File(ScssSettings.getDefault().getSassPath());
+                }
+                String libPath = root.getAbsolutePath() + File.separator + "lib";
+                loadPaths.add(libPath);
+            }
             scriptingContainer = new ScriptingContainer();
             scriptingContainer.setLoadPaths(loadPaths);
         }
@@ -122,9 +131,15 @@ public class Engine {
             boolean lineComments = commentParser.isLineCommentsEnabled(settings.isLineCommentsEnabled());
             String outputStyle = commentParser.getOutputStyle(settings.getOutputStyle().name);
 
-            String script = "require 'sass'\n";
-            script += "options = {}\n";
+            String script = "options = {}\n";
+            script += "require 'sass'\n";
             script += "options[:load_paths] = " + findDependencies(fo) + "\n";
+            if(ScssSettings.getDefault().useCompass()) {
+                script += "require 'compass'\n";
+                script += "Compass.add_project_configuration \n";
+                script += "Compass.configuration.project_path ||= Dir.pwd \n";
+                script += "options[:load_paths] += Compass.configuration.sass_load_paths \n";
+            }
             script += "options[:style] = :" + outputStyle + "\n";
             script += "options[:line_comments] = " + ((lineComments) ? "true" : false) + "\n";
             script += "options[:debug_info] = " + ((debugInfo) ? "true" : false) + "\n";

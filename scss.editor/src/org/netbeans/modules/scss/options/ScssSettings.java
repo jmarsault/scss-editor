@@ -1,12 +1,17 @@
 package org.netbeans.modules.scss.options;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.Preferences;
+import org.jruby.embed.ScriptingContainer;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
@@ -21,6 +26,8 @@ public class ScssSettings {
     private static final String PROP_COMMENTS_ENABLED = "lineCommentsEnabled";
     private static final String PROP_DEBUG_INFO_ENABLED = "debugInfoEnabled";
     private static final String PROP_OUTPUT_STYLE = "outputStyle";
+    private static final String PROP_SYSTEM_SASS = "systemSass";
+    private static final String PROP_USE_COMPASS = "useCompass";
     private static final long serialVersionUID = 85176380568174L;
     private static final String PROP_BUNDLE_USED = "bundleUsed";
     private static final String BUNDLE_VERSION = "sass-3.1.20";
@@ -98,6 +105,23 @@ public class ScssSettings {
         prefs.putBoolean(PROP_DEBUG_INFO_ENABLED, b);
     }
 
+    public boolean useSystemSass() {
+        return prefs.getBoolean(PROP_SYSTEM_SASS, false);
+    }
+
+    public void setUseSystemSass(boolean b) {
+        prefs.putBoolean(PROP_SYSTEM_SASS, b);
+        prefs.put(PROP_SASS_PATH, getRubyLoadPaths(":"));
+    }
+
+    public boolean useCompass() {
+        return prefs.getBoolean(PROP_USE_COMPASS, false);
+    }
+
+    public void setUseCompass(boolean b) {
+        prefs.putBoolean(PROP_USE_COMPASS, b);
+    }
+
     protected static String getSassVersion(File file) {
         String version = null;
         try {
@@ -119,7 +143,34 @@ public class ScssSettings {
     }
 
     protected static String getBundleVersion() {
-        return getSassVersion(new File(ScssSettings.getDefault().getBundlePath()));
+        try {
+            return getSassVersion(new File(ScssSettings.getDefault().getBundlePath()));
+        }
+        catch(Exception e) {
+        }
+        return "";
+    }
+
+    protected static String getSystemSassVersion() {
+        StringBuilder result = new StringBuilder();
+        List<String> loadPaths = getRubyLoadPaths();
+
+        ScriptingContainer scriptingContainer;
+        scriptingContainer = new ScriptingContainer();
+        scriptingContainer.setLoadPaths(loadPaths);
+        scriptingContainer.setErrorWriter(new StringWriter());
+        scriptingContainer.put("@result", result);
+
+        String script = "require 'sass' \n"
+                      + "@result.append(::Sass::VERSION)";
+        try {
+            scriptingContainer.runScriptlet(script);
+            scriptingContainer.terminate();
+        } catch (Exception e) {
+//           String error = scriptingContainer.getErrorWriter().toString();
+        }
+
+        return result.toString();
     }
 
     public static enum OutputStyle {
@@ -150,12 +201,64 @@ public class ScssSettings {
     public static void checkInstall() throws Exception {
         if (!ScssSettings.getDefault().isBundleVersion()) {
             String sassPath = ScssSettings.getDefault().getSassPath();
-            if (sassPath == null || sassPath.isEmpty()
-                    || ScssSettings.getSassVersion(new File(sassPath)) == null) {
+            Boolean useSystemSass = ScssSettings.getDefault().useSystemSass();
+            if ((sassPath == null || sassPath.isEmpty()
+                    || ScssSettings.getSassVersion(new File(sassPath)) == null) && !useSystemSass) {
 //	    OptionsDisplayer.getDefault().open(OptionsDisplayer.ADVANCED + "/Scss");
                 OptionsDisplayer.getDefault().open("Advanced/Scss");
                 throw new Exception(NbBundle.getMessage(ScssSettings.class, "ERR_NoValidInstallation"));
             }
         }
+    }
+
+    static List<String> getRubyLoadPaths() {
+        String[] cmd = {"ruby", "-e", "puts $:"};
+        return exec(cmd);
+    }
+    static String getRubyLoadPaths(String glue) {
+        String result = "";
+        for(String str : getRubyLoadPaths()) {
+            result += str + glue;
+        }
+        return result.substring(0, result.length()-1);
+    }
+
+    static public List<String> exec(String[] command) {
+        Runtime r = Runtime.getRuntime();
+        List<String> result = new ArrayList<String>();
+//        InputOutput io = IOProvider.getDefault().getIO(NbBundle.getMessage(Engine.class, "TITLE_output"), false);
+
+        try {
+            Process p = r.exec(command);
+            InputStream in = p.getInputStream();
+            BufferedInputStream buf = new BufferedInputStream(in);
+            InputStreamReader inread = new InputStreamReader(buf);
+            BufferedReader bufferedreader = new BufferedReader(inread);
+
+            String line;
+            while ((line = bufferedreader.readLine()) != null) {
+                    // filter out platform dependend paths
+                if(! line.contains("vendor") || line.contains("linux")) {
+                    continue;
+                }
+                result.add(line);
+            }
+            try {
+                if (p.waitFor() != 0) {
+//                    io.getOut().println("exit value = " + p.exitValue());
+                }
+            } catch (InterruptedException e) {
+//                io.getOut().println(e.getMessage());
+            } finally {
+                // Close the InputStream
+                bufferedreader.close();
+                inread.close();
+                buf.close();
+                in.close();
+            }
+        } catch (IOException e) {
+//            io.getOut().println(e.getMessage());
+        }
+        return result;
     }
 }
