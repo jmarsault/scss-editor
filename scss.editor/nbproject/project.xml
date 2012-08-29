@@ -235,8 +235,8 @@
                 <binary-origin>release/modules/ext/org-netbeans-modules-scss.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jruby-complete-1.6.7.2.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jruby-complete-1.6.7.2.jar</binary-origin>
+                <runtime-relative-path>ext/jruby-complete-1.7.0.preview2.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jruby-complete-1.7.0.preview2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
