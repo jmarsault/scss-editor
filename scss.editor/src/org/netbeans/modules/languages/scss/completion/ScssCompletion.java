@@ -92,7 +92,6 @@ public class ScssCompletion implements CodeCompletionHandler {
     private static char firstPrefixChar;
     private static final String UNIVERSAL_SELECTOR = "*"; //NOI18N
     //unit testing support
-
     private boolean addSpaceBeforeItem = false;
 
     @Override
@@ -339,11 +338,23 @@ public class ScssCompletion implements CodeCompletionHandler {
     }
 
     boolean isPropertyName(TokenSequence<ScssTokenId> ts, int offset) {
+        boolean isProperty = false;
         ts.move(offset);
         Collection<? extends TokenId> searchedId = new ArrayList<TokenId>(Arrays.asList(new TokenId[]{ScssLanguageHierarchy.getToken(ScssLexer.LBRACE), ScssLanguageHierarchy.getToken(ScssLexer.SEMI)}));
-        Token propertyName = LexerUtils.followsToken(ts, searchedId, true, true, ScssLanguageHierarchy.getToken(ScssLexer.WS), ScssLanguageHierarchy.getToken(ScssLexer.NL), ScssLanguageHierarchy.getToken(ScssLexer.ML_COMMENT), ScssLanguageHierarchy.getToken(ScssLexer.UNKNOWN_DIR));
-
-        return propertyName != null;
+        int index = ts.index();
+        Token propertyName = LexerUtils.followsToken(ts, searchedId, true, false, ScssLanguageHierarchy.getToken(ScssLexer.WS), ScssLanguageHierarchy.getToken(ScssLexer.NL), ScssLanguageHierarchy.getToken(ScssLexer.ML_COMMENT), ScssLanguageHierarchy.getToken(ScssLexer.UNKNOWN_DIR));
+        if (propertyName != null) {
+            if (propertyName.id() == ScssLanguageHierarchy.getToken(ScssLexer.LBRACE)) {
+                isProperty = true;
+            } else {
+                searchedId = new ArrayList<TokenId>(Arrays.asList(new TokenId[]{ScssLanguageHierarchy.getToken(ScssLexer.IM_PROPERTY), ScssLanguageHierarchy.getToken(ScssLexer.VAR)}));
+                propertyName = LexerUtils.followsToken(ts, searchedId, true, true, ScssLanguageHierarchy.getToken(ScssLexer.WS), ScssLanguageHierarchy.getToken(ScssLexer.IDENT), ScssLanguageHierarchy.getToken(ScssLexer.COLON), ScssLanguageHierarchy.getToken(ScssLexer.ML_COMMENT));
+                isProperty = propertyName != null;
+            }
+        }
+        ts.moveIndex(index);
+        ts.movePrevious();
+        return isProperty;
     }
 
     private boolean isProperty(TokenSequence ts, int offset) {
@@ -447,7 +458,7 @@ public class ScssCompletion implements CodeCompletionHandler {
                     addSemicolon = false;
                     if (null != LexerUtils.followsToken(ts, ScssLanguageHierarchy.getToken(ScssLexer.IMPORT_DIR), true, false, ScssLanguageHierarchy.getToken(ScssLexer.WS))) {
                         //strip off the leading quote and the rest of token after caret
-                        String valuePrefix = originalToken.text().toString().substring(1, tokenDiff);
+                        String valuePrefix = originalToken.text().toString().substring(1, tokenDiff < 1 ? 1 : tokenDiff);
                         List<CompletionProposal> imports = (List<CompletionProposal>) completeImport(file,
                                 caretOffset, valuePrefix, false, addSemicolon);
                         int moveBack = addSemicolon ? 1 : 0;
@@ -474,13 +485,13 @@ public class ScssCompletion implements CodeCompletionHandler {
             if (id == null || (id.ordinal() != ScssLexer.UNKNOWN_DIR && id.ordinal() != ScssLexer.ML_COMMENT)) {
                 List<CompletionProposal> all = new ArrayList<CompletionProposal>();
 
-                if (!isPropertyName(ts, offset)) {
-                    //complete at keywords without prefix
-                    Collection<String> rules = Filters.filterStrings(AT_RULES, prefix);
-                    rules = addSuffix(rules, " ");
-                    all.addAll(Utilities.createRAWCompletionProposals(rules, ElementKind.FIELD, offset - prefix.length()));
-                }
-                if (!isProperty(ts, offset)) {
+//                if (!isPropertyName(ts, offset)) {
+//                    //complete at keywords without prefix
+//                    Collection<String> rules = Filters.filterStrings(AT_RULES, prefix);
+//                    rules = addSuffix(rules, " ");
+//                    all.addAll(Utilities.createRAWCompletionProposals(rules, ElementKind.FIELD, offset - prefix.length()));
+//                }
+                if (!isProperty(ts, offset) && !isPropertyName(ts, offset)) {
                     //complete html selector names
                     all.addAll(completeHtmlSelectors(prefix, offset - prefix.length()));
                     completionProposals.addAll(all);

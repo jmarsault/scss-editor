@@ -145,8 +145,7 @@ public class ScssSettings {
     protected static String getBundleVersion() {
         try {
             return getSassVersion(new File(ScssSettings.getDefault().getBundlePath()));
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
         }
         return "";
     }
@@ -162,7 +161,7 @@ public class ScssSettings {
         scriptingContainer.put("@result", result);
 
         String script = "require 'sass' \n"
-                      + "@result.append(::Sass::VERSION)";
+                + "@result.append(::Sass::VERSION)";
         try {
             scriptingContainer.runScriptlet(script);
             scriptingContainer.terminate();
@@ -215,12 +214,16 @@ public class ScssSettings {
         String[] cmd = {"ruby", "-e", "puts $:"};
         return exec(cmd);
     }
+
     static String getRubyLoadPaths(String glue) {
         String result = "";
-        for(String str : getRubyLoadPaths()) {
+        for (String str : getRubyLoadPaths()) {
             result += str + glue;
         }
-        return result.substring(0, result.length()-1);
+        if (!result.isEmpty()) {
+            result = result.substring(0, result.length() - 1);
+        }
+        return result;
     }
 
     static public List<String> exec(String[] command) {
@@ -237,8 +240,8 @@ public class ScssSettings {
 
             String line;
             while ((line = bufferedreader.readLine()) != null) {
-                    // filter out platform dependend paths
-                if(! line.contains("vendor") || line.contains("linux")) {
+                // filter out platform dependend paths
+                if (!line.contains("vendor") || line.contains("linux")) {
                     continue;
                 }
                 result.add(line);
