@@ -2,15 +2,14 @@
 
 This project adds support for editing Scss files in Netbeans IDE (Syntax highlighting, format, comment, brace matching).
 
-![Example code](/joonty/scss-editor/raw/master/images/styles.png)
+![Example code](https://raw.github.com/jmarsault/scss-editor/7.2/images/styles.png)
 ## News
 
 * *2012-03-01* **0.4 BETA** for netbeans 6.9.1 and 7.0, doc block tags in SCSS files overwrite global variables and set output CSS path
 * *2011-03-23* **0.3 BETA** for netbeans 6.9.1 and 7.0 BETA with some new features (css conversion and scss compilation)
 
-![Options dialogue](/joonty/scss-editor/raw/master/images/options.png)
-
 ## Configuration
+![Options dialogue](https://raw.github.com/jmarsault/scss-editor/7.2/images/options.png)
 
 The options dialogue (see above) can be used to set global options. If you want to override these options for a given file, you can use the new docblock format at the top of your file. For example:
 
