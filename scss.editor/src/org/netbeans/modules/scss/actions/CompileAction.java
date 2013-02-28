@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.scss.engine.Engine;
+import org.netbeans.modules.scss.options.ScssSettings;
 import org.netbeans.spi.editor.document.OnSaveTask;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -12,8 +13,6 @@ import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Utilities;
-
-
 
 @ActionID(category = "Build",
         id = "org.netbeans.modules.scss.actions.CompileAction")
@@ -55,7 +54,11 @@ public final class CompileAction implements OnSaveTask, ActionListener {
 
         @Override
         public OnSaveTask createTask(Context context) {
-            return new CompileAction();
+            OnSaveTask saveTask = null;
+            if (ScssSettings.getDefault().isCompileOnSave()) {
+                saveTask = new CompileAction();
+            }
+            return saveTask;
         }
     }
 }
