@@ -1,3 +1,5 @@
+This plugin is now obsolote. Scss is now supported by Netbeans without plugin : https://netbeans.org/kb/docs/webclient/html5-editing-css.html
+
 # Netbeans plugin for Scss language
 
 This project adds support for editing Scss files in Netbeans IDE (Syntax highlighting, format, comment, brace matching).
