@@ -1,4 +1,4 @@
-This plugin is now obsolote. Scss is now supported by Netbeans without plugin : https://netbeans.org/kb/docs/webclient/html5-editing-css.html
+This plugin is now obsolete. Scss is now supported by Netbeans without plugin : https://netbeans.org/kb/docs/webclient/html5-editing-css.html
 
 # Netbeans plugin for Scss language
 
